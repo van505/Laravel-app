@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from "react";
 import axios from "axios";
+import "../../sass/profileForm.scss";
 
 export default function ProfileForm() {
   const [form, setForm] = useState({
@@ -13,31 +14,32 @@ export default function ProfileForm() {
   const [profiles, setProfiles] = useState([]);
   const [message, setMessage] = useState("");
 
-  // GET profiles
+  // Load profiles when component mounts
+  useEffect(() => {
+    fetchProfiles();
+  }, []);
+
   const fetchProfiles = async () => {
     try {
       const res = await axios.get("/api/profiles");
       setProfiles(res.data);
     } catch (err) {
-      console.error(err);
+      console.error("Error fetching profiles:", err);
     }
   };
 
-  useEffect(() => {
-    fetchProfiles();
-  }, []);
-
-  // Handle form change
   const handleChange = (e) => {
     setForm({ ...form, [e.target.name]: e.target.value });
   };
 
-  // POST profile
   const handleSubmit = async (e) => {
     e.preventDefault();
     try {
       const res = await axios.post("/api/profiles", form);
-      setMessage(res.data.message);
+
+      setMessage("Profile successfully added!");
+
+      // Clear form
       setForm({
         first_name: "",
         last_name: "",
@@ -45,21 +47,28 @@ export default function ProfileForm() {
         phone: "",
         address: "",
       });
-      fetchProfiles(); // Refresh list
+
+      // Refresh profile list
+      fetchProfiles();
+
+      // Hide message after 3 seconds
+      setTimeout(() => setMessage(""), 3000);
     } catch (err) {
-      console.error(err);
       setMessage("Error saving profile.");
     }
   };
 
-  // DELETE profile
+  // ✅ Updated delete function with confirmation
   const handleDelete = async (id) => {
     try {
       await axios.delete(`/api/profiles/${id}`);
-      setMessage("Profile deleted successfully.");
+      setMessage("Profile deleted successfully!"); // Confirmation message
       fetchProfiles();
+
+      // Hide message after 3 seconds
+      setTimeout(() => setMessage(""), 3000);
     } catch (err) {
-      console.error(err);
+      console.error("Error deleting profile:", err);
       setMessage("Error deleting profile.");
     }
   };
@@ -67,9 +76,10 @@ export default function ProfileForm() {
   return (
     <div className="profile-form-container">
       <h2>Profile Management</h2>
+
       {message && <div className="message">{message}</div>}
 
-      <form onSubmit={handleSubmit} className="profile-form">
+      <form className="profile-form" onSubmit={handleSubmit}>
         <input
           type="text"
           name="first_name"
@@ -97,10 +107,9 @@ export default function ProfileForm() {
         <input
           type="text"
           name="phone"
-          placeholder="Phone"
+          placeholder="Phone Number"
           value={form.phone}
           onChange={handleChange}
-          required
         />
         <input
           type="text"
@@ -108,22 +117,32 @@ export default function ProfileForm() {
           placeholder="Address"
           value={form.address}
           onChange={handleChange}
-          required
         />
         <button type="submit">Add Profile</button>
       </form>
 
-      <h3>Profiles List</h3>
       <ul className="profile-list">
-        {profiles.map((profile) => (
-          <li key={profile.id} className="profile-item">
-            <div>
-              <strong>{profile.first_name} {profile.last_name}</strong><br />
-              {profile.email} | {profile.phone} | {profile.address}
-            </div>
-            <button onClick={() => handleDelete(profile.id)}>Delete</button>
-          </li>
-        ))}
+        {profiles.length > 0 ? (
+          profiles.map((profile) => (
+            <li key={profile.id} className="profile-item">
+              <div className="profile-info">
+                <strong>
+                  {profile.first_name} {profile.last_name}
+                </strong>
+                <small>{profile.email}</small>
+                <small>{profile.phone}</small>
+                <small>{profile.address}</small>
+              </div>
+              <div className="profile-actions">
+                {/* ✅ Added Edit button here */}
+                <button className="edit-btn">Edit</button>
+                <button className="delete-btn" onClick={() => handleDelete(profile.id)}>Delete</button>
+              </div>
+            </li>
+          ))
+        ) : (
+          <p>No profiles found.</p>
+        )}
       </ul>
     </div>
   );

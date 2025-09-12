@@ -1,42 +1,73 @@
 .profile-form-container {
   max-width: 600px;
-  margin: 30px auto;
+  margin: 40px auto;
   padding: 20px;
   background: #f8f9fa;
-  border-radius: 8px;
-  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+  border-radius: 10px;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
 
-  h2, h3 {
+  h2 {
     text-align: center;
     color: #333;
+    margin-bottom: 20px;
   }
 
+  /* Success and Error Messages */
   .message {
-    background: #d4edda;
-    color: #155724;
-    padding: 10px;
-    border-radius: 5px;
+    width: 100%;
+    padding: 12px;
+    border-radius: 6px;
     margin-bottom: 15px;
+    text-align: center;
+    font-weight: bold;
+    font-size: 14px;
+    transition: opacity 0.3s ease;
+
+    background: #d4edda; /* success background */
+    color: #155724; /* success text */
+    border: 1px solid #c3e6cb;
+
+    &.error {
+      background: #f8d7da;
+      color: #721c24;
+      border: 1px solid #f5c6cb;
+    }
   }
 
+  /* Profile Form Styling */
   .profile-form {
+    width: 100%;
     display: flex;
     flex-direction: column;
+    margin-bottom: 20px;
 
     input {
-      margin-bottom: 10px;
+      margin-bottom: 12px;
       padding: 10px;
       border: 1px solid #ccc;
-      border-radius: 5px;
+      border-radius: 6px;
+      font-size: 14px;
+      transition: border-color 0.3s ease;
+
+      &:focus {
+        border-color: #007bff;
+        outline: none;
+      }
     }
 
     button {
       padding: 10px;
       background: #007bff;
       color: #fff;
+      font-size: 16px;
+      font-weight: bold;
       border: none;
-      border-radius: 5px;
+      border-radius: 6px;
       cursor: pointer;
+      transition: background 0.3s ease;
 
       &:hover {
         background: #0056b3;
@@ -44,37 +75,76 @@
     }
   }
 
+  /* Profile List Styling */
   .profile-list {
+    width: 100%;
     list-style: none;
     padding: 0;
 
     .profile-item {
       background: #fff;
       border: 1px solid #ddd;
-      padding: 10px;
+      padding: 15px;
       margin-top: 10px;
       display: flex;
       justify-content: space-between;
       align-items: center;
+      border-radius: 6px;
+      transition: box-shadow 0.3s ease;
 
-      button {
-        background: #dc3545;
-        padding: 5px 10px;
-        border: none;
-        color: white;
-        border-radius: 4px;
-        cursor: pointer;
+      &:hover {
+        box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
+      }
 
-        &:hover {
-          background: #c82333;
+      .profile-info {
+        display: flex;
+        flex-direction: column;
+        gap: 4px;
+
+        strong {
+          font-size: 16px;
+          color: #333;
+        }
+
+        small {
+          font-size: 13px;
+          color: #555;
+        }
+      }
+
+      /* Actions for edit and delete buttons */
+      .profile-actions {
+        display: flex;
+        gap: 8px;
+
+        button {
+          padding: 6px 12px;
+          border: none;
+          color: white;
+          font-size: 14px;
+          border-radius: 4px;
+          cursor: pointer;
+          transition: background 0.3s ease;
+        }
+
+        /* Edit button style */
+        .edit-btn {
+          background: #28a745;
+
+          &:hover {
+            background: #218838;
+          }
+        }
+
+        /* Delete button style */
+        .delete-btn {
+          background: #dc3545;
+
+          &:hover {
+            background: #c82333;
+          }
         }
       }
     }
   }
 }
-
-// Bootstrap core
-@import "node_modules/bootstrap/scss/bootstrap";
-
-// Custom styles
-@import "profileForm";

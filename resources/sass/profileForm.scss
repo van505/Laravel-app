@@ -1,0 +1,80 @@
+.profile-form-container {
+  max-width: 600px;
+  margin: 30px auto;
+  padding: 20px;
+  background: #f8f9fa;
+  border-radius: 8px;
+  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+
+  h2, h3 {
+    text-align: center;
+    color: #333;
+  }
+
+  .message {
+    background: #d4edda;
+    color: #155724;
+    padding: 10px;
+    border-radius: 5px;
+    margin-bottom: 15px;
+  }
+
+  .profile-form {
+    display: flex;
+    flex-direction: column;
+
+    input {
+      margin-bottom: 10px;
+      padding: 10px;
+      border: 1px solid #ccc;
+      border-radius: 5px;
+    }
+
+    button {
+      padding: 10px;
+      background: #007bff;
+      color: #fff;
+      border: none;
+      border-radius: 5px;
+      cursor: pointer;
+
+      &:hover {
+        background: #0056b3;
+      }
+    }
+  }
+
+  .profile-list {
+    list-style: none;
+    padding: 0;
+
+    .profile-item {
+      background: #fff;
+      border: 1px solid #ddd;
+      padding: 10px;
+      margin-top: 10px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+
+      button {
+        background: #dc3545;
+        padding: 5px 10px;
+        border: none;
+        color: white;
+        border-radius: 4px;
+        cursor: pointer;
+
+        &:hover {
+          background: #c82333;
+        }
+      }
+    }
+  }
+}
+
+// Bootstrap core
+@import "node_modules/bootstrap/scss/bootstrap";
+
+// Custom styles
+@import "profileForm";

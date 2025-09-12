@@ -1,8 +1,10 @@
-import React from 'react';
-import ReactDOM from 'react-dom';
-import ProfileForm from './components/ProfileForm';
+import React from "react";
+import { createRoot } from "react-dom/client";
+import ProfileForm from "./components/ProfileForm";
 
-if (document.getElementById('profile-form')) {
-    ReactDOM.render(<ProfileForm />, document.getElementById('profile-form'));
+const container = document.getElementById("profile-form");
+
+if (container) {
+    const root = createRoot(container);
+    root.render(<ProfileForm />);
 }
-

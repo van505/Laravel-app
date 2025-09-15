@@ -13,6 +13,7 @@ export default function ProfileForm() {
 
   const [profiles, setProfiles] = useState([]);
   const [message, setMessage] = useState("");
+  const [editingId, setEditingId] = useState(null); // ✅ Track which profile is being edited
 
   // Load profiles when component mounts
   useEffect(() => {
@@ -35,9 +36,16 @@ export default function ProfileForm() {
   const handleSubmit = async (e) => {
     e.preventDefault();
     try {
-      const res = await axios.post("/api/profiles", form);
-
-      setMessage("Profile successfully added!");
+      if (editingId) {
+        // ✅ If editing, send PUT request
+        await axios.put(`/api/profiles/${editingId}`, form);
+        setMessage("Profile successfully updated!");
+        setEditingId(null); // Reset editing state
+      } else {
+        // ✅ If adding, send POST request
+        await axios.post("/api/profiles", form);
+        setMessage("Profile successfully added!");
+      }
 
       // Clear form
       setForm({
@@ -62,15 +70,38 @@ export default function ProfileForm() {
   const handleDelete = async (id) => {
     try {
       await axios.delete(`/api/profiles/${id}`);
-      setMessage("Profile deleted successfully!"); // Confirmation message
+      setMessage("Profile deleted successfully!");
       fetchProfiles();
 
-      // Hide message after 3 seconds
       setTimeout(() => setMessage(""), 3000);
     } catch (err) {
       console.error("Error deleting profile:", err);
       setMessage("Error deleting profile.");
     }
+  };
+
+  // ✅ Edit function - load data into form
+  const handleEdit = (profile) => {
+    setForm({
+      first_name: profile.first_name,
+      last_name: profile.last_name,
+      email: profile.email,
+      phone: profile.phone,
+      address: profile.address,
+    });
+    setEditingId(profile.id); // Track which profile is being edited
+  };
+
+  // ✅ Cancel function - reset form and exit edit mode
+  const handleCancelEdit = () => {
+    setForm({
+      first_name: "",
+      last_name: "",
+      email: "",
+      phone: "",
+      address: "",
+    });
+    setEditingId(null); // Exit edit mode
   };
 
   return (
@@ -118,7 +149,23 @@ export default function ProfileForm() {
           value={form.address}
           onChange={handleChange}
         />
-        <button type="submit">Add Profile</button>
+
+        <div className="form-buttons">
+          <button type="submit">
+            {editingId ? "Update Profile" : "Add Profile"}
+          </button>
+
+          {/* ✅ Cancel button shows only in edit mode */}
+          {editingId && (
+            <button
+              type="button"
+              className="cancel-btn"
+              onClick={handleCancelEdit}
+            >
+              Cancel
+            </button>
+          )}
+        </div>
       </form>
 
       <ul className="profile-list">
@@ -134,9 +181,23 @@ export default function ProfileForm() {
                 <small>{profile.address}</small>
               </div>
               <div className="profile-actions">
-                {/* ✅ Added Edit button here */}
-                <button className="edit-btn">Edit</button>
-                <button className="delete-btn" onClick={() => handleDelete(profile.id)}>Delete</button>
+                {/* ✅ Edit button loads data into form */}
+                <button
+                  className="edit-btn"
+                  type="button"
+                  onClick={() => handleEdit(profile)}
+                >
+                  Edit
+                </button>
+
+                {/* ✅ Delete button */}
+                <button
+                  className="delete-btn"
+                  type="button"
+                  onClick={() => handleDelete(profile.id)}
+                >
+                  Delete
+                </button>
               </div>
             </li>
           ))

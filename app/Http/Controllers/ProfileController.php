@@ -18,10 +18,10 @@ class ProfileController extends Controller
     {
         $validated = $request->validate([
             'first_name' => 'required',
-            'last_name' => 'required',
-            'email' => 'required|email|unique:profiles',
-            'phone' => 'required',
-            'address' => 'required'
+            'last_name'  => 'required',
+            'email'      => 'required|email|unique:profiles',
+            'phone'      => 'required',
+            'address'    => 'required'
         ]);
 
         $profile = Profile::create($validated);
@@ -39,5 +39,31 @@ class ProfileController extends Controller
         $profile->delete();
 
         return response()->json(['message' => 'Profile deleted successfully']);
+    }
+
+    // PUT update profile
+    public function update(Request $request, $id)
+    {
+
+        // Find profile by ID
+        $profile = Profile::findOrFail($id);
+        
+        // ✅ Validate updated data
+        $validated = $request->validate([
+            'first_name' => 'required',
+            'last_name'  => 'required',
+            'email'      => 'required|email|unique:profiles,email,' . $id, // ignore current profile's email
+            'phone'      => 'required',
+            'address'    => 'required'
+        ]);
+
+
+        // Update with validated data
+        $profile->update($validated);
+
+        return response()->json([
+            'message' => 'Profile updated successfully!',
+            'profile' => $profile
+        ], 200);
     }
 }
